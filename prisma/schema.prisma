@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id                 Int      @id @default(autoincrement())
+  nome               String
+  email              String   @unique
+  password           String
+  role      Role     @default(USER)
+  pontos_experiencia Int      @default(0)
+  streak             Int      @default(0)
+  createdAt          DateTime @default(now())
+
+  // Relações
+  squads             Squad[]
+  participations     Participation[]
+  evidences          Evidence[]
+  polls_criadas      Poll[]
+  votes              Vote[]
+  achievements       Achievement[]
+}
+
+model Squad {
+  id          Int      @id @default(autoincrement())
+  nomeSquad   String
+  descricao   String?
+  createdAt   DateTime @default(now())
+
+  // Relações
+  users       User[]
+  actions     Action[]
+  polls       Poll[]
+}
+
+model Action {
+  id                Int       @id @default(autoincrement())
+  titulo            String
+  categoria         String
+  descricao         String?
+  num_participantes Int?
+  latitude          Float?
+  longitude         Float?
+  estado            String    @default("Planeamento")
+  data_hora         DateTime?
+  squadId           Int
+
+  // Relações
+  squad             Squad           @relation(fields: [squadId], references: [id])
+  participations    Participation[]
+  evidences         Evidence[]
+}
+
+model Participation {
+  id          Int     @id @default(autoincrement())
+  rsvp_status String
+  validacao   Boolean @default(false)
+
+  // Chaves Estrangeiras
+  userId      Int
+  actionId    Int
+
+  // Relações
+  user        User    @relation(fields: [userId], references: [id])
+  action      Action  @relation(fields: [actionId], references: [id])
+}
+
+model Evidence {
+  id         Int    @id @default(autoincrement())
+  imagem_url String
+
+  // Chaves Estrangeiras
+  userId     Int
+  actionId   Int
+
+  // Relações
+  user       User   @relation(fields: [userId], references: [id])
+  action     Action @relation(fields: [actionId], references: [id])
+}
+
+model Poll {
+  id          Int      @id @default(autoincrement())
+  data_inicio DateTime @default(now())
+  data_limite DateTime
+  estado      String   @default("Ativa")
+
+  // Chaves Estrangeiras
+  squadId     Int
+  criadorId   Int
+
+  // Relações
+  squad       Squad    @relation(fields: [squadId], references: [id])
+  criador     User     @relation(fields: [criadorId], references: [id])
+  votes       Vote[]
+}
+
+model Vote {
+  id          Int      @id @default(autoincrement())
+  poll_option String
+  data_hora   DateTime @default(now())
+
+  // Chaves Estrangeiras
+  userId      Int
+  pollId      Int
+
+  // Relações
+  user        User     @relation(fields: [userId], references: [id])
+  poll        Poll     @relation(fields: [pollId], references: [id])
+}
+
+model Achievement {
+  id        Int    @id @default(autoincrement())
+  nome      String
+  descricao String
+
+  // Relações
+  users     User[]
+}
