@@ -51,8 +51,6 @@ export const deleteUserController = async (req: Request, res: Response) => {
 
 export const getMeController = async (req: any, res: Response) => {
     try {
-        // O authGuard deve estar a colocar o ID do user no pedido (req)
-        // Ajusta req.user?.id ou req.userId dependendo de como o teu authGuard está escrito
         const userId = req.userId || req.user?.id; 
 
         if (!userId) {

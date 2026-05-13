@@ -26,7 +26,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }));
 
-// 🛡️ previne forca bruta (maximo 100 pedidos em 15 min)
+// previne forca bruta (maximo 100 pedidos em 15 min)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
