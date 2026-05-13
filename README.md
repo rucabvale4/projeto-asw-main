@@ -38,8 +38,9 @@ As palavras-passe são armazenadas de forma segura utilizando o algoritmo de has
 3. **Token:** A API devolverá um token. Copia esse código.
 4. **Uso:** Em todos os pedidos para rotas protegidas, deves incluir o cabeçalho: `Authorization: Bearer <teu_token_aqui>`
 
-### Moc Account
+### Moc Accounts
 
+* `{ "email: admin1@wedo.pt || password: admin123" }`
 * `{ "email: user1@wedo.pt || password: user123" }`
 
 ---
